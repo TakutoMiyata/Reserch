@@ -49,7 +49,7 @@ def generateRandomExpression(length):
         idx1[j] = idx1[j] + 1 #場所の整合性を保つ
         #print("Conditions:", conditions)
 
-    print(idx1)
+    #print(idx1)
     for k in range(num_parentheses):
         # アルファベットがある位置をランダムに選択
         alpha_positions = [pos for pos, char in enumerate(conditions) if char.isalpha() and char.isupper() and len(char) == 1]
