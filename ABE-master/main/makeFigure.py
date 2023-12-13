@@ -6,15 +6,22 @@ import pandas as pd
 
 def figurePol(fileName, rsaEncTime, rsaDecTime):
     df = pd.read_csv(fileName)
-    full_path = "figurePolChange.svg"
+    full_path = "../ExecutionTimeData/figurePolChange.svg"
 
     try:
         plt.figure(1)
         plt.plot(df['lenPol'], df['averageEnc'], label='ABE Encyiption', marker="o")
         plt.plot(df['lenPol'], df['averageDec'], label='ABE Decryption', marker="o")
-        plt.axhline(rsaEncTime.iloc[0], label='RSA Encryption')  # RSAの場合の値
-        plt.axhline(rsaDecTime.iloc[0], label='RSA Decryption')  # RSAの場合の値
-        plt.legend()
+        
+        # RSA Encryptionの水平線
+        plt.axhline(rsaEncTime.iloc[0], color="r", linestyle='--', label='RSA Encryption')  # RSAの場合の値
+        # テキスト表示
+        plt.text(0, rsaEncTime.iloc[0], f'RSA Encryption: {rsaEncTime.iloc[0]:.6f}', color="r")
+
+        # RSA Decryptionの水平線
+        plt.axhline(rsaDecTime.iloc[0], color="g", linestyle='--', label='RSA Decryption')  # RSAの場合の値
+        # テキスト表示
+        plt.text(0, rsaDecTime.iloc[0], f'RSA Decryption: {rsaDecTime.iloc[0]:.6f}', color="g")
 
         # x軸とy軸の範囲を指定（0から始まる場合）
         plt.xlim(0, max(df['lenPol']))
@@ -22,6 +29,8 @@ def figurePol(fileName, rsaEncTime, rsaDecTime):
 
         plt.xlabel("Number of Policies")
         plt.ylabel("Execution time [ms]")
+        plt.legend()
+
 
         # ベクトル画像形式 (SVG) で保存
         plt.savefig(full_path, format='svg', bbox_inches='tight')
@@ -31,15 +40,22 @@ def figurePol(fileName, rsaEncTime, rsaDecTime):
 
 def figureAttr(fileName, rsaEncTime, rsaDecTime):
     df = pd.read_csv(fileName)
-    full_path = "figureAttrChange.svg"
+    full_path = "../ExecutionTimeData/figureAttrChange.svg"
 
     try:
         plt.figure(2)
-        plt.plot(df['lenAttr'], df['averageEnc'], label='Encyiption', marker="o")
-        plt.plot(df['lenAttr'], df['averageDec'], label='Decryption', marker="o")
-        plt.axhline(rsaEncTime.iloc[0], color = "r", label='RSA Encryption')  # RSAの場合の値
-        plt.axhline(rsaDecTime.iloc[0], color = "g", label='RSA Decryption')  # RSAの場合の値
-        plt.legend()
+        plt.plot(df['lenAttr'], df['averageEnc'], label='ABE Encyiption', marker="o")
+        plt.plot(df['lenAttr'], df['averageDec'], label='ABE Decryption', marker="o")
+
+        # RSA Encryptionの水平線
+        plt.axhline(rsaEncTime.iloc[0], color="r", linestyle='--', label='RSA Encryption')  # RSAの場合の値
+        # テキスト表示
+        plt.text(0, rsaEncTime.iloc[0], f'{rsaEncTime.iloc[0]:.6f}', color="r")
+
+        # RSA Decryptionの水平線
+        plt.axhline(rsaDecTime.iloc[0], color="g", linestyle='--', label='RSA Decryption')  # RSAの場合の値
+        # テキスト表示
+        plt.text(0, rsaDecTime.iloc[0], f'{rsaDecTime.iloc[0]:.6f}', color="g")
 
         # x軸とy軸の範囲を指定（0から始まる場合）
         plt.xlim(0, max(df['lenAttr']))
@@ -47,6 +63,7 @@ def figureAttr(fileName, rsaEncTime, rsaDecTime):
 
         plt.xlabel("Number of Attributes")
         plt.ylabel("Execution time [ms]")
+        plt.legend()
 
         # ベクトル画像形式 (SVG) で保存
         plt.savefig(full_path, format='svg', bbox_inches='tight')
