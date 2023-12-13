@@ -7,6 +7,8 @@ import random
 import numpy as np
 import matplotlib.pyplot as plt
 import os
+import csv
+
 
 
 def figureEnc(lenAttr, averageEnc):
@@ -25,7 +27,14 @@ def figureEnc(lenAttr, averageEnc):
     """
     try:
         plt.figure(1)
-        plt.plot(lenAttr, averageEnc, marker="o")
+        x = lenAttr
+        y = averageEnc
+        plt.plot(x, y, marker="o")
+
+        # x軸とy軸の範囲を指定（0から始まる場合）
+        plt.xlim(0, max(x))
+        plt.ylim(0, max(y))
+
         plt.title("Encryption(Policy=1)")
         plt.xlabel("Number of Attribute")
         plt.ylabel("Execution time [ms]")
@@ -58,7 +67,15 @@ def figureDec(lenAttr, averageDec):
     """
     try:
         plt.figure(2)
-        plt.plot(lenAttr, averageDec, marker="o")
+
+        x = lenAttr
+        y = averageDec
+        plt.plot(x, y, marker="o")
+
+        # x軸とy軸の範囲を指定（0から始まる場合）
+        plt.xlim(0, max(x))
+        plt.ylim(0, max(y))
+
         plt.title("SuccessDecryption(Policy=1)")
         plt.xlabel("Number of Attribute")
         plt.ylabel("Execution time [ms]")
@@ -91,8 +108,16 @@ def figureCompare(lenAttr, averageEnc, averageDec):
     """
     try:
         plt.figure(3)
-        plt.plot(lenAttr, averageEnc, marker="o", label=("Encryption"))
-        plt.plot(lenAttr, averageDec, marker="o", label=("Decryption"))
+        x = lenAttr
+        y = averageEnc
+        plt.plot(x, y, marker="o", label=("Encryption"))
+        y = averageDec
+        plt.plot(x, y, marker="o", label=("Decryption"))
+
+        # x軸とy軸の範囲を指定（0から始まる場合）
+        plt.xlim(0, max(x))
+        plt.ylim(0, max(max(averageDec), max(averageEnc)))
+
         plt.title("Compare(Policy=1)")
         plt.xlabel("Number of Attribute")
         plt.ylabel("Execution time [ms]")
@@ -184,6 +209,17 @@ def main():
     figureEnc(lenAttr, averageEnc)
     figureDec(lenAttr, averageDec)
     figureCompare(lenAttr, averageEnc, averageDec)
+
+    # csvに保存
+    data = list(zip(averageEnc, averageDec, lenAttr))
+    with open("../ExecutionTimeData/attrChange.csv", "w", newline="") as csvfile:
+        try:
+            csvwriter = csv.writer(csvfile)
+            csvwriter.writerow(["averageEnc", "averageDec", "lenAttr"])
+            csvwriter.writerows(data)
+            print("Finish writing csvfile")
+        except Exception as e:
+            print(f"Error wrting csvfile: {e}")
 
 
 if __name__ == "__main__":

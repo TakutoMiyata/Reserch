@@ -10,7 +10,6 @@ import os
 import string
 import random
 import sys
-import csv
 
 
 def generateRandomExpression(length):
@@ -23,7 +22,7 @@ def generateRandomExpression(length):
     #print("Conditions:", conditions)
 
     # ランダムにANDとORを挿入
-    operators = ["and", "OR"]
+    operators = ["and", "and"]
     for i in range(length - 1):
         # ランダムに演算子を挿入
         conditions = conditions[:1+i*2] + [random.choice(operators)] + conditions[1+i*2:]
@@ -35,9 +34,10 @@ def generateRandomExpression(length):
     num_parentheses = random.randint(1, length//3)
     #num_parentheses = 2
     #print(f"num_parentheses = {num_parentheses}")
-    idx1 = np.zeros(num_parentheses)
-    idx2 = np.zeros(num_parentheses)
+    #idx1 = np.zeros(num_parentheses)
+    #idx2 = np.zeros(num_parentheses)
 
+    """
     for j in range(num_parentheses):
         # アルファベットがある位置をランダムに選択
         alpha_positions = [pos for pos, char in enumerate(conditions) if char.isalpha() and char.isupper() and len(char) == 1]
@@ -47,33 +47,28 @@ def generateRandomExpression(length):
             idx1[j] = random.choice(alpha_positions)
         # アルファベットを囲む(を追加
         conditions = conditions[:int(idx1[j])] + [parentheses[0]] + conditions[int(idx1[j]):]
+        idx1[j] = idx1[j] + 1 #場所の整合性を保つ
         #print("Conditions:", conditions)
 
-    open_parentheses_positions = [pos for pos, char in enumerate(conditions) if char == "("]
-    
+    #print(idx1)
     for k in range(num_parentheses):
-        print(open_parentheses_positions)
         # アルファベットがある位置をランダムに選択
         alpha_positions = [pos for pos, char in enumerate(conditions) if char.isalpha() and char.isupper() and len(char) == 1]
         #print(f"alpha_positions = ", alpha_positions)
         idx2[k] = random.choice(alpha_positions)
-
-        while idx2[k] == 0 or (idx2[k]-1 in open_parentheses_positions) or (conditions[int(idx2[k]-1)] == "(") or (idx2[k]-1 <= min(open_parentheses_positions)):
+        while idx2[k] == 0 or (idx2[k] in idx1) or (conditions[int(idx2[k]-1)] == "(") or (idx2[k] <= np.min(idx1)):
             idx2[k] = random.choice(alpha_positions)
-            
-        if idx2[k] > min(open_parentheses_positions):
-            print(f"min(open_parentheses_positions) = {min(open_parentheses_positions)}")
-            #indexToRemove = np.random.choice(np.where(open_parentheses_positions == np.min(open_parentheses_positions))[0]) #最小値の中から一つを選択
-            #open_parentheses_positions = np.delete(open_parentheses_positions, indexToRemove) #最小値を削除
-            min_positions = [i for i, pos in enumerate(open_parentheses_positions) if pos == min(open_parentheses_positions)]  # 最小値の中から一つを選択
-            indexToRemove = max(min_positions)
-            open_parentheses_positions.pop(indexToRemove)
+        if idx2[k] > np.min(idx1):
+            #print(f"min(idx1) = {np.min(idx1)}")
+            indexToRemove = np.random.choice(np.where(idx1 == np.min(idx1))[0]) #最小値の中から一つを選択
+            idx1 = np.delete(idx1, indexToRemove) #最小値を削除
+            #idx1 = np.delete(idx1, np.where(idx1 == np.min(idx1)))
             #print("最小値を削除")
-
         # アルファベットを囲む)を追加
         conditions = conditions[:int(idx2[k]+1)] + [parentheses[1]] + conditions[int(idx2[k]+1):]
-        print("Conditions:", conditions)
+        #print("Conditions:", conditions)
     #---------------------ここまでを改善したい---------------------
+    """
 
     # 一番外側に()を追加
     conditions = [parentheses[0]] + conditions + [parentheses[1]]
@@ -86,7 +81,7 @@ def generateRandomExpression(length):
 
 def figureEnc(lenPol, averageEnc):
     save_folder = "../ExecutionTimeData/"
-    base_filename = "SuccessEncryption_Attribute1.svg"
+    base_filename = "OnlyAND_Encryption_Attribute1.svg"
     full_path = os.path.join(save_folder, base_filename)
 
     # ファイルが存在するか確認
@@ -100,14 +95,8 @@ def figureEnc(lenPol, averageEnc):
     """
     try:
         plt.figure(1)
-        x = lenPol
-        y = averageEnc
-        plt.plot(x, y, marker="o")
-        # x軸とy軸の範囲を指定（0から始まる場合）
-        plt.xlim(0, max(x))
-        plt.ylim(0, max(y))
-
-        plt.title("Encryption(Attribute=1)")
+        plt.plot(lenPol, averageEnc, marker="o")
+        plt.title("Encryption (Attribute=1)")
         plt.xlabel("Number of Policy")
         plt.ylabel("Execution time [ms]")
         """
@@ -124,7 +113,7 @@ def figureEnc(lenPol, averageEnc):
 
 def figureDec(lenPol, averageDec):
     save_folder = "../ExecutionTimeData/"
-    base_filename = "SuccessDecryption_Attribute1.svg"
+    base_filename = "OnlyAND_Decryption_Attribute1.svg"
     full_path = os.path.join(save_folder, base_filename)
 
     # ファイルが存在するか確認
@@ -139,15 +128,8 @@ def figureDec(lenPol, averageDec):
     """
     try:
         plt.figure(2)
-        x = lenPol
-        y = averageDec
-        plt.plot(x, y, marker="o")
-
-        # x軸とy軸の範囲を指定（0から始まる場合）
-        plt.xlim(0, max(x))
-        plt.ylim(0, max(y))
-
-        plt.title("Decryption(Attribute=1)")
+        plt.plot(lenPol, averageDec, marker="o")
+        plt.title("Decryption (Attribute=1)")
         plt.xlabel("Number of Policy")
         plt.ylabel("Execution time [ms]")
         """
@@ -164,7 +146,7 @@ def figureDec(lenPol, averageDec):
 
 def figureCompare(lenPol, averageEnc, averageDec):
     save_folder = "../ExecutionTimeData/"
-    base_filename = "SuccessCompare_Attribute1.svg"
+    base_filename = "OnlyAND_Compare_Attribute1.svg"
     full_path = os.path.join(save_folder, base_filename)
 
     # ファイルが存在するか確認
@@ -179,17 +161,9 @@ def figureCompare(lenPol, averageEnc, averageDec):
     """
     try:
         plt.figure(3)
-        x = lenPol
-        y = averageEnc
-        plt.plot(x, y, marker="o", label=("Encryption"))
-        y = averageDec
-        plt.plot(x, y, marker="o", label=("Decryption"))
-
-        # x軸とy軸の範囲を指定（0から始まる場合）
-        plt.xlim(0, max(x))
-        plt.ylim(0, max(max(averageDec), max(averageEnc)))
-
-        plt.title("Compare(Attribute=1)")
+        plt.plot(lenPol, averageEnc, marker="o", label=("Encryption"))
+        plt.plot(lenPol, averageDec, marker="o", label=("Decryption"))
+        plt.title("Compare (Attribute=1)")
         plt.xlabel("Number of Policy")
         plt.ylabel("Execution time [ms]")
         plt.legend()
@@ -287,13 +261,6 @@ def main():
     figureDec(lenPol, averageDec)
     figureCompare(lenPol, averageEnc, averageDec)
 
-    # csvに保存
-    data = list(zip(averageEnc, averageDec, lenPol))
-    with open("../ExecutionTimeData/polChange.csv", "w", newline="") as csvfile:
-        csvwriter = csv.writer(csvfile)
-        csvwriter.writerow(["averageEnc", "averageDec", "lenPol"])
-        csvwriter.writerows(data)
-    print("Finish writing csvfile")
 
 if __name__ == "__main__":
     debug = False
