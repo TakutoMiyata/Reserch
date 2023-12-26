@@ -32,8 +32,8 @@ def figureEnc(lenAttr, averageEnc):
         plt.plot(x, y, marker="o")
 
         # x軸とy軸の範囲を指定（0から始まる場合）
-        plt.xlim(0, max(x))
-        plt.ylim(0, max(y))
+        plt.xlim(0, max(x)*1.2)
+        plt.ylim(0, max(y)*1.2)
 
         plt.title("Encryption(Policy=1)")
         plt.xlabel("Number of Attribute")
@@ -73,8 +73,8 @@ def figureDec(lenAttr, averageDec):
         plt.plot(x, y, marker="o")
 
         # x軸とy軸の範囲を指定（0から始まる場合）
-        plt.xlim(0, max(x))
-        plt.ylim(0, max(y))
+        plt.xlim(0, max(x)*1.2)
+        plt.ylim(0, max(y)*1.2)
 
         plt.title("SuccessDecryption(Policy=1)")
         plt.xlabel("Number of Attribute")
@@ -115,8 +115,8 @@ def figureCompare(lenAttr, averageEnc, averageDec):
         plt.plot(x, y, marker="o", label=("Decryption"))
 
         # x軸とy軸の範囲を指定（0から始まる場合）
-        plt.xlim(0, max(x))
-        plt.ylim(0, max(max(averageDec), max(averageEnc)))
+        plt.xlim(0, max(x)*1.2)
+        plt.ylim(0, max(max(averageDec), max(averageEnc))*1.2)
 
         plt.title("Compare(Policy=1)")
         plt.xlabel("Number of Attribute")

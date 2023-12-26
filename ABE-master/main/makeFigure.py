@@ -24,8 +24,8 @@ def figurePol(fileName, rsaEncTime, rsaDecTime):
         plt.text(0, rsaDecTime.iloc[0], f'RSA Decryption: {rsaDecTime.iloc[0]:.6f}', color="g")
 
         # x軸とy軸の範囲を指定（0から始まる場合）
-        plt.xlim(0, max(df['lenPol']))
-        plt.ylim(0, max(max(df['averageDec']), max(df['averageEnc'])))
+        plt.xlim(0, max(df['lenPol'])*1.2)
+        plt.ylim(0, max(max(df['averageDec']), max(df['averageEnc']))*1.2)
 
         plt.xlabel("Number of Policies")
         plt.ylabel("Execution time [ms]")
@@ -58,8 +58,8 @@ def figureAttr(fileName, rsaEncTime, rsaDecTime):
         plt.text(0, rsaDecTime.iloc[0], f'{rsaDecTime.iloc[0]:.6f}', color="g")
 
         # x軸とy軸の範囲を指定（0から始まる場合）
-        plt.xlim(0, max(df['lenAttr']))
-        plt.ylim(0, max(max(df['averageDec']), max(df['averageEnc'])))
+        plt.xlim(0, max(df['lenAttr'])*1.2)
+        plt.ylim(0, max(max(df['averageDec']), max(df['averageEnc']))*1.2)
 
         plt.xlabel("Number of Attributes")
         plt.ylabel("Execution time [ms]")
