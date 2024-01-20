@@ -97,7 +97,7 @@ def figureEnc(lenPol, averageEnc):
         plt.figure(1)
         plt.plot(lenPol, averageEnc, marker="o")
         plt.title("Encryption (Attribute=1)")
-        plt.xlabel("Number of Attributes in the Policy")
+        plt.xlabel("Number of Policy")
         plt.ylabel("Execution time [ms]")
         """
         plt.show()  # グラフを表示
@@ -130,7 +130,7 @@ def figureDec(lenPol, averageDec):
         plt.figure(2)
         plt.plot(lenPol, averageDec, marker="o")
         plt.title("Decryption (Attribute=1)")
-        plt.xlabel("Number of Attributes in the Policy")
+        plt.xlabel("Number of Policy")
         plt.ylabel("Execution time [ms]")
         """
         plt.show()  # グラフを表示
@@ -164,7 +164,7 @@ def figureCompare(lenPol, averageEnc, averageDec):
         plt.plot(lenPol, averageEnc, marker="o", label=("Encryption"))
         plt.plot(lenPol, averageDec, marker="o", label=("Decryption"))
         plt.title("Compare (Attribute=1)")
-        plt.xlabel("Number of Attributes in the Policy")
+        plt.xlabel("Number of Policy")
         plt.ylabel("Execution time [ms]")
         plt.legend()
         """

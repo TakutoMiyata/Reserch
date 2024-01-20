@@ -27,7 +27,7 @@ def figurePol(fileName, rsaEncTime, rsaDecTime):
         plt.xlim(0, max(df['lenPol'])*1.2)
         plt.ylim(0, max(max(df['averageDec']), max(df['averageEnc']))*1.2)
 
-        plt.xlabel("Number of Attributes in the Policy")
+        plt.xlabel("Number of Policies")
         plt.ylabel("Execution time [ms]")
         plt.legend()
 

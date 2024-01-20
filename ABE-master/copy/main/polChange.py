@@ -9,7 +9,6 @@ import matplotlib.pyplot as plt
 import os
 import string
 import random
-import sys
 
 
 def generateRandomExpression(length):
@@ -19,25 +18,24 @@ def generateRandomExpression(length):
     #print("Random alphabet:", random_alphabet)
 
     conditions = list(random_alphabet[:length])
-    #print("Conditions:", conditions)
+    print("Conditions:", conditions)
 
     # ランダムにANDとORを挿入
-    operators = ["and", "and"]
+    operators = ["and", "OR"]
     for i in range(length - 1):
         # ランダムに演算子を挿入
         conditions = conditions[:1+i*2] + [random.choice(operators)] + conditions[1+i*2:]
 
-    #print("After inserting operators:", conditions)
+    print("After inserting operators:", conditions)
     #--------------------ここまでOK------------------------
 
     parentheses = ["(", ")"]
     num_parentheses = random.randint(1, length//3)
     #num_parentheses = 2
-    #print(f"num_parentheses = {num_parentheses}")
-    #idx1 = np.zeros(num_parentheses)
-    #idx2 = np.zeros(num_parentheses)
+    print(f"num_parentheses = {num_parentheses}")
+    idx1 = np.zeros(num_parentheses)
+    idx2 = np.zeros(num_parentheses)
 
-    """
     for j in range(num_parentheses):
         # アルファベットがある位置をランダムに選択
         alpha_positions = [pos for pos, char in enumerate(conditions) if char.isalpha() and char.isupper() and len(char) == 1]
@@ -50,7 +48,7 @@ def generateRandomExpression(length):
         idx1[j] = idx1[j] + 1 #場所の整合性を保つ
         #print("Conditions:", conditions)
 
-    #print(idx1)
+    print(idx1)
     for k in range(num_parentheses):
         # アルファベットがある位置をランダムに選択
         alpha_positions = [pos for pos, char in enumerate(conditions) if char.isalpha() and char.isupper() and len(char) == 1]
@@ -64,11 +62,12 @@ def generateRandomExpression(length):
             idx1 = np.delete(idx1, indexToRemove) #最小値を削除
             #idx1 = np.delete(idx1, np.where(idx1 == np.min(idx1)))
             #print("最小値を削除")
+        
+
         # アルファベットを囲む)を追加
         conditions = conditions[:int(idx2[k]+1)] + [parentheses[1]] + conditions[int(idx2[k]+1):]
         #print("Conditions:", conditions)
     #---------------------ここまでを改善したい---------------------
-    """
 
     # 一番外側に()を追加
     conditions = [parentheses[0]] + conditions + [parentheses[1]]
@@ -81,7 +80,7 @@ def generateRandomExpression(length):
 
 def figureEnc(lenPol, averageEnc):
     save_folder = "../ExecutionTimeData/"
-    base_filename = "OnlyAND_Encryption_Attribute1.svg"
+    base_filename = "Encryption_Attribute1.svg"
     full_path = os.path.join(save_folder, base_filename)
 
     # ファイルが存在するか確認
@@ -96,8 +95,8 @@ def figureEnc(lenPol, averageEnc):
     try:
         plt.figure(1)
         plt.plot(lenPol, averageEnc, marker="o")
-        plt.title("Encryption (Attribute=1)")
-        plt.xlabel("Number of Attributes in the Policy")
+        plt.title("Encryption(Attribute=1)")
+        plt.xlabel("Number of Policy")
         plt.ylabel("Execution time [ms]")
         """
         plt.show()  # グラフを表示
@@ -113,7 +112,7 @@ def figureEnc(lenPol, averageEnc):
 
 def figureDec(lenPol, averageDec):
     save_folder = "../ExecutionTimeData/"
-    base_filename = "OnlyAND_Decryption_Attribute1.svg"
+    base_filename = "Decryption_Attribute1.svg"
     full_path = os.path.join(save_folder, base_filename)
 
     # ファイルが存在するか確認
@@ -129,8 +128,8 @@ def figureDec(lenPol, averageDec):
     try:
         plt.figure(2)
         plt.plot(lenPol, averageDec, marker="o")
-        plt.title("Decryption (Attribute=1)")
-        plt.xlabel("Number of Attributes in the Policy")
+        plt.title("Decryption(Attribute=1)")
+        plt.xlabel("Number of Policy")
         plt.ylabel("Execution time [ms]")
         """
         plt.show()  # グラフを表示
@@ -146,7 +145,7 @@ def figureDec(lenPol, averageDec):
 
 def figureCompare(lenPol, averageEnc, averageDec):
     save_folder = "../ExecutionTimeData/"
-    base_filename = "OnlyAND_Compare_Attribute1.svg"
+    base_filename = "Compare_Attribute1.svg"
     full_path = os.path.join(save_folder, base_filename)
 
     # ファイルが存在するか確認
@@ -163,8 +162,8 @@ def figureCompare(lenPol, averageEnc, averageDec):
         plt.figure(3)
         plt.plot(lenPol, averageEnc, marker="o", label=("Encryption"))
         plt.plot(lenPol, averageDec, marker="o", label=("Decryption"))
-        plt.title("Compare (Attribute=1)")
-        plt.xlabel("Number of Attributes in the Policy")
+        plt.title("Compare(Attribute=1)")
+        plt.xlabel("Number of Policy")
         plt.ylabel("Execution time [ms]")
         plt.legend()
         """
@@ -214,11 +213,9 @@ def main():
             msg = pairing_group.random(GT)
 
         # generate a ciphertext
-            length = int(9 + 10*m)
+            length = int(10 + 10*m)
             policy_str = generateRandomExpression(length)
-            policy_str = "( " + policy_str + " OR A )"
             print("policy = ", policy_str)
-            length = int (10 + 10*m)
             print(f"number of policies = {length} ")
 
 
@@ -245,7 +242,6 @@ def main():
                 print("Successful decryption.")
             else:
                 print("Decryption failed.")
-                sys.exit()
 
             line = '-' * 20  # 20回のハイフンで構成された文字列
             print("\n" + line + "\n")

@@ -7,81 +7,11 @@ import random
 import numpy as np
 import matplotlib.pyplot as plt
 import os
-import string
-import random
-import sys
 
 
-def generateRandomExpression(length):
-    alphabet = string.ascii_uppercase[:26]
-    # Policyの数が100になるまで対応するために4倍する
-    random_alphabet = ''.join(random.sample(alphabet*4, len(alphabet)*4))
-    #print("Random alphabet:", random_alphabet)
-
-    conditions = list(random_alphabet[:length])
-    #print("Conditions:", conditions)
-
-    # ランダムにANDとORを挿入
-    operators = ["and", "and"]
-    for i in range(length - 1):
-        # ランダムに演算子を挿入
-        conditions = conditions[:1+i*2] + [random.choice(operators)] + conditions[1+i*2:]
-
-    #print("After inserting operators:", conditions)
-    #--------------------ここまでOK------------------------
-
-    parentheses = ["(", ")"]
-    num_parentheses = random.randint(1, length//3)
-    #num_parentheses = 2
-    #print(f"num_parentheses = {num_parentheses}")
-    #idx1 = np.zeros(num_parentheses)
-    #idx2 = np.zeros(num_parentheses)
-
-    """
-    for j in range(num_parentheses):
-        # アルファベットがある位置をランダムに選択
-        alpha_positions = [pos for pos, char in enumerate(conditions) if char.isalpha() and char.isupper() and len(char) == 1]
-        #print(f"alpha_positions = ", alpha_positions)
-        idx1[j] = random.choice(alpha_positions)
-        while idx1[j] == len(conditions) or idx1[j] == len(conditions)-1:
-            idx1[j] = random.choice(alpha_positions)
-        # アルファベットを囲む(を追加
-        conditions = conditions[:int(idx1[j])] + [parentheses[0]] + conditions[int(idx1[j]):]
-        idx1[j] = idx1[j] + 1 #場所の整合性を保つ
-        #print("Conditions:", conditions)
-
-    #print(idx1)
-    for k in range(num_parentheses):
-        # アルファベットがある位置をランダムに選択
-        alpha_positions = [pos for pos, char in enumerate(conditions) if char.isalpha() and char.isupper() and len(char) == 1]
-        #print(f"alpha_positions = ", alpha_positions)
-        idx2[k] = random.choice(alpha_positions)
-        while idx2[k] == 0 or (idx2[k] in idx1) or (conditions[int(idx2[k]-1)] == "(") or (idx2[k] <= np.min(idx1)):
-            idx2[k] = random.choice(alpha_positions)
-        if idx2[k] > np.min(idx1):
-            #print(f"min(idx1) = {np.min(idx1)}")
-            indexToRemove = np.random.choice(np.where(idx1 == np.min(idx1))[0]) #最小値の中から一つを選択
-            idx1 = np.delete(idx1, indexToRemove) #最小値を削除
-            #idx1 = np.delete(idx1, np.where(idx1 == np.min(idx1)))
-            #print("最小値を削除")
-        # アルファベットを囲む)を追加
-        conditions = conditions[:int(idx2[k]+1)] + [parentheses[1]] + conditions[int(idx2[k]+1):]
-        #print("Conditions:", conditions)
-    #---------------------ここまでを改善したい---------------------
-    """
-
-    # 一番外側に()を追加
-    conditions = [parentheses[0]] + conditions + [parentheses[1]]
-    conditions = " ".join(map(str, conditions))
-    
-    #print("Final conditions:", conditions)
-    #理想   Finalconditions: (A OR (B andC))...みたいな出力が欲しい
-    return conditions
-
-
-def figureEnc(lenPol, averageEnc):
+def figureEnc(lenAttr, averageEnc):
     save_folder = "../ExecutionTimeData/"
-    base_filename = "OnlyAND_Encryption_Attribute1.svg"
+    base_filename = "Encryption_Policy1.svg"
     full_path = os.path.join(save_folder, base_filename)
 
     # ファイルが存在するか確認
@@ -95,9 +25,9 @@ def figureEnc(lenPol, averageEnc):
     """
     try:
         plt.figure(1)
-        plt.plot(lenPol, averageEnc, marker="o")
-        plt.title("Encryption (Attribute=1)")
-        plt.xlabel("Number of Attributes in the Policy")
+        plt.plot(lenAttr, averageEnc, marker="o")
+        plt.title("Encryption(Policy=1)")
+        plt.xlabel("Number of Attribute")
         plt.ylabel("Execution time [ms]")
         """
         plt.show()  # グラフを表示
@@ -111,9 +41,9 @@ def figureEnc(lenPol, averageEnc):
         print(f"Error saving figure: {e}")
 
 
-def figureDec(lenPol, averageDec):
+def figureDec(lenAttr, averageDec):
     save_folder = "../ExecutionTimeData/"
-    base_filename = "OnlyAND_Decryption_Attribute1.svg"
+    base_filename = "Decryption(Policy=1).svg"
     full_path = os.path.join(save_folder, base_filename)
 
     # ファイルが存在するか確認
@@ -128,9 +58,9 @@ def figureDec(lenPol, averageDec):
     """
     try:
         plt.figure(2)
-        plt.plot(lenPol, averageDec, marker="o")
-        plt.title("Decryption (Attribute=1)")
-        plt.xlabel("Number of Attributes in the Policy")
+        plt.plot(lenAttr, averageDec, marker="o")
+        plt.title("Decryption(Policy=1)")
+        plt.xlabel("Number of Attribute")
         plt.ylabel("Execution time [ms]")
         """
         plt.show()  # グラフを表示
@@ -144,9 +74,9 @@ def figureDec(lenPol, averageDec):
         print(f"Error saving figure: {e}")
 
 
-def figureCompare(lenPol, averageEnc, averageDec):
+def figureCompare(lenAttr, averageEnc, averageDec):
     save_folder = "../ExecutionTimeData/"
-    base_filename = "OnlyAND_Compare_Attribute1.svg"
+    base_filename = "Compare_Policy1.svg"
     full_path = os.path.join(save_folder, base_filename)
 
     # ファイルが存在するか確認
@@ -161,10 +91,10 @@ def figureCompare(lenPol, averageEnc, averageDec):
     """
     try:
         plt.figure(3)
-        plt.plot(lenPol, averageEnc, marker="o", label=("Encryption"))
-        plt.plot(lenPol, averageDec, marker="o", label=("Decryption"))
-        plt.title("Compare (Attribute=1)")
-        plt.xlabel("Number of Attributes in the Policy")
+        plt.plot(lenAttr, averageEnc, marker="o", label=("Encryption"))
+        plt.plot(lenAttr, averageDec, marker="o", label=("Decryption"))
+        plt.title("Compare_Policy1")
+        plt.xlabel("Number of Attribute")
         plt.ylabel("Execution time [ms]")
         plt.legend()
         """
@@ -180,8 +110,7 @@ def figureCompare(lenPol, averageEnc, averageDec):
 
 
 def main():
-    # lenAttr = np.zeros(10)
-    lenPol = np.zeros(10, dtype=int)
+    lenAttr = np.zeros(10)
     averageEnc = np.zeros(10)
     averageDec = np.zeros(10)
 
@@ -204,9 +133,8 @@ def main():
             # random_length = random.randint(1, 10)
 
         # リストを生成
-            # length = 10 + 10*m
-            # attr_list = [chr(ord('A') + i % 26) for i in range(length)]
-            attr_list = ["A"]
+            length = 10 + 10*m
+            attr_list = [chr(ord('A') + i % 26) for i in range(length)]
             print("attribute = ", ",".join(attr_list))
             key = cpabe.keygen(pk, msk, attr_list)
 
@@ -214,13 +142,8 @@ def main():
             msg = pairing_group.random(GT)
 
         # generate a ciphertext
-            length = int(9 + 10*m)
-            policy_str = generateRandomExpression(length)
-            policy_str = "( " + policy_str + " OR A )"
+            policy_str = 'A'
             print("policy = ", policy_str)
-            length = int (10 + 10*m)
-            print(f"number of policies = {length} ")
-
 
         # encryption
             start_time = time.time()  # 計測開始
@@ -245,21 +168,20 @@ def main():
                 print("Successful decryption.")
             else:
                 print("Decryption failed.")
-                sys.exit()
 
             line = '-' * 20  # 20回のハイフンで構成された文字列
             print("\n" + line + "\n")
 
+        lenAttr[m] = len(attr_list)
+        print(f"number of attributes = {int(lenAttr[m])} ")
         averageEnc[m] = np.mean(encTime)
         print(f"average time to Encrypt = {averageEnc[m]}")
         averageDec[m] = np.mean(decTime)
         print(f"average time to Decrypt = {averageDec[m]}")
 
-        lenPol[m] = length
-
-    figureEnc(lenPol, averageEnc)
-    figureDec(lenPol, averageDec)
-    figureCompare(lenPol, averageEnc, averageDec)
+    figureEnc(lenAttr, averageEnc)
+    figureDec(lenAttr, averageDec)
+    figureCompare(lenAttr, averageEnc, averageDec)
 
 
 if __name__ == "__main__":
