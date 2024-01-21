@@ -37,7 +37,7 @@ def figureEnc(lenAttr, averageEnc):
 
         plt.title("Encryption(Policy=1)")
         plt.xlabel("Number of Attribute")
-        plt.ylabel("Execution time [ms]")
+        plt.ylabel("Execution time [s]")
         """
         plt.show()  # グラフを表示
         input("Press Enter to close...")  # Enterが押されるまで待機
@@ -78,7 +78,7 @@ def figureDec(lenAttr, averageDec):
 
         plt.title("SuccessDecryption(Policy=1)")
         plt.xlabel("Number of Attribute")
-        plt.ylabel("Execution time [ms]")
+        plt.ylabel("Execution time [s]")
         """
         plt.show()  # グラフを表示
         input("Press Enter to close...")  # Enterが押されるまで待機
@@ -120,7 +120,7 @@ def figureCompare(lenAttr, averageEnc, averageDec):
 
         plt.title("Compare(Policy=1)")
         plt.xlabel("Number of Attribute")
-        plt.ylabel("Execution time [ms]")
+        plt.ylabel("Execution time [s]")
         plt.legend()
         """
         plt.show()  # グラフを表示

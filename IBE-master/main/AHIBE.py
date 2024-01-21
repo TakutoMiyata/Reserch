@@ -424,41 +424,45 @@ if __name__ == "__main__":
     encTime = np.zeros(10)
     decTime = np.zeros(10)
 
-    for i in range(10):
-        plaintext = b'Hello, World!'
-        max_level = 5  # 階層の最大レベルを設定
 
-        # システムセットアップ
+    for i in range(10):
+        plaintext = b'Hello'
+        max_level = 5
+
         start1 = time.time()
         System_para, PP, MK = Setup(max_level)
         end1 = time.time()
 
-        # アイデンティティの定義
-        ID_string = ["Alice", "Dept1", "RoleX"]
+        ID_string = ["Alice", "Bob", "Cindy"]
 
-        # 秘密鍵の生成
         start2 = time.time()
         Sk_ID = SkGen(System_para, PP, MK, ID_string)
         end2 = time.time()
 
-        # 暗号化
+        Del_ID_string = ["Alice", "Bob", "Cindy", "Davis"]
+
+        start3 = time.time()
+        Sk_Del_ID = SkDel(System_para, PP, Sk_ID, Del_ID_string)
+        end3 = time.time()
+
+        receiver_ID_string = Del_ID_string
+
         start4 = time.time()
-        Enc_key, Enc_message = Enc(System_para, PP, ID_string, plaintext)
+        Enc_key, Enc_message = Enc(System_para, PP, receiver_ID_string, plaintext)
         end4 = time.time()
 
-        # 復号化
-        start5 = time.time()
-        Decrypted_message = Dec(System_para, PP, Sk_ID, Enc_key, Enc_message)
-        end5 = time.time()
+        receiver_Sk = Sk_Del_ID
 
-        #print("Original Message:", plaintext)
-        #print("Decrypted Message:", Decrypted_message)
+        start5 = time.time()
+        result = Dec(System_para, PP, receiver_Sk, Enc_key, Enc_message)
+        end5 = time.time()
 
         #print("Setup:%f s" % (end1 - start1))
         #print("SkGen:%f s" % (end2 - start2))
         #print("SkDel:%f s" % (end3 - start3))
         #print("Enc:%f s" % (end4 - start4))
         #print("Dec:%f s" % (end5 - start5))
+
         SetTime[i] =  end1 - start1
         SkGenTime[i] = end2 - start2
         encTime[i] = end4 - start4
@@ -468,7 +472,7 @@ if __name__ == "__main__":
     aveSkGenTime = np.mean(SkGenTime)*1000
     aveEncTime = np.mean(encTime)*1000
     aveDecTime = np.mean(decTime)*1000
-
+    
     print("Setup:%f ms" % aveSetTime)
     print("SkGen:%f ms" % aveSkGenTime)
     print("Enc:%f ms" % aveEncTime)

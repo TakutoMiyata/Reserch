@@ -28,7 +28,7 @@ def figurePol(fileName, rsaEncTime, rsaDecTime):
         plt.ylim(0, max(max(df['averageDec']), max(df['averageEnc']))*1.2)
 
         plt.xlabel("Number of Attributes in the Policy")
-        plt.ylabel("Execution time [ms]")
+        plt.ylabel("Execution time [s]")
         plt.legend()
 
 
@@ -62,7 +62,7 @@ def figureAttr(fileName, rsaEncTime, rsaDecTime):
         plt.ylim(0, max(max(df['averageDec']), max(df['averageEnc']))*1.2)
 
         plt.xlabel("Number of Attributes")
-        plt.ylabel("Execution time [ms]")
+        plt.ylabel("Execution time [s]")
         plt.legend()
 
         # ベクトル画像形式 (SVG) で保存
