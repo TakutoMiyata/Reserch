@@ -12,8 +12,8 @@ contract DataContract{
     // データ構造の定義
     struct Record {
         string SA;
-        string IPFSaddr;
-        string sign;
+        string[10] IPFSaddr;
+        address from;
     }
 
     // レコードの保存
@@ -21,9 +21,9 @@ contract DataContract{
 
     // この関数は所有者によってのみ呼び出すことができる
     // データの追加
-    function addData(string memory SA, string memory IPFSaddr, string memory sign, address from) public returns (bool) {
-        if (msg.sender == from) {
-            records[from] = Record(SA, IPFSaddr, sign);
+    function addData(string memory SA, string[10] memory IPFSaddr, address from) public returns (bool) {
+        if (msg.sender == owner) {
+            records[address(this)] = Record(SA, IPFSaddr, from);
             return true;
         } else {
             
@@ -32,11 +32,12 @@ contract DataContract{
     }
 
     // データの取得
-    function getData(address conAddr) public view returns (string memory) {
+    function getData(address conAddr) public view returns (string[10] memory) {
         if (conAddr != address(0)) {
             return records[conAddr].IPFSaddr;
         } else {
-            return "";
+            string[10] memory emptyArray;
+            return emptyArray;
         }
     }
     
