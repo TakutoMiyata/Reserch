@@ -4,7 +4,7 @@ import numpy as np
 group = PairingGroup("MNT159")
 
 def setup(P):
-    msk = group.random(ZR, 1, P)
+    msk = group.random(ZR,1,P)
     MPK = msk*P
 
     return msk, MPK
@@ -39,7 +39,7 @@ def recoverAddr(ADDR,R,USK,P):
     return ADDR_
 
 if __name__ == "__main__":
-    P = 10
+    P = 10 #seed　多分なんでもいい
     ID_string = "0xe22694a13837DA6bC13B666b37A5Cb321B654b49"
     ID = ID_string.encode('utf-8')
     msk, MPK = setup(P)
@@ -48,6 +48,10 @@ if __name__ == "__main__":
     ADDR_ = recoverAddr(ADDR,R,USK,P)
 
     if ADDR == ADDR_:
+        print(ID_string)
+        print(ID)
+        print(ADDR)
+        print(ADDR_)
         print("correct")
     else:
         print("miss")

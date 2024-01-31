@@ -434,7 +434,7 @@ if __name__ == "__main__":
         end1 = time.time()
 
         # アイデンティティの定義
-        ID_string = ["Alice", "Dept1", "RoleX"]
+        ID_string = ["Alice", "Dean", "Hospital1"]
 
         # 秘密鍵の生成
         start2 = time.time()
