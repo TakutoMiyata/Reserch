@@ -1,1 +1,1 @@
-otameshi2
+otameshiFolder/otameshi2.txt

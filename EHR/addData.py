@@ -2,7 +2,7 @@ from web3 import Web3, HTTPProvider
 import ipfshttpclient
 from addToIPFS import addToIPFS
 import json
-
+from stealthAddr import *
 
 def addData(folderName):
     # IPFSにデータを追加
@@ -10,19 +10,22 @@ def addData(folderName):
     print("add to IPFS")
 
     # ステルスアドレスを計算
-    #web3 = Web3(Web3.HTTPProvider('http://10.34.4.206:7545'))
-    web3 = Web3(Web3.HTTPProvider('http://192.168.151.43:7545'))
+    web3 = Web3(Web3.HTTPProvider('http://10.34.4.206:7545'))
+    #web3 = Web3(Web3.HTTPProvider('http://192.168.151.43:7545'))
     settingFile = json.load(open('./setting.json'))
     key = settingFile['privateKey']
     acct = web3.eth.account.from_key(key)
-    print(acct.address)
+    id = acct.address
+    print("ID:",id)
     
-    steathAddr = "0xe22694a13837DA6bC13B666b37A5Cb321B654b49"
+    P = 10
+    stealthAddr = generate_address_for_id(id, P)
+    stealthAddr = convert_addr_to_string(stealthAddr)
     print("compute Stealh Address")
-    print(steathAddr)
+    print("stealth Address:",stealthAddr)
 
     # (EHR addr, ステルスアドレス, generator's addr)をconstoractorでブロックチェーンに保存
-
+    '''
     # UserAddress.solを呼び出してgenerator's addrを出す
     contract_abi = [
     {
@@ -47,10 +50,10 @@ def addData(folderName):
     contract = web3.eth.contract(address=contract_address, abi=contract_abi)
 
     generatorAddr = contract.functions.getSenderAddress().call()
-    print(generatorAddr)
-
+    #print(generatorAddr)
+    '''
     # DataContract.solを呼び出してdataをブロックチェーンに保存
-    contract_abi =  [
+    contract_abi = [
     {
       "inputs": [],
       "stateMutability": "nonpayable",
@@ -101,9 +104,9 @@ def addData(folderName):
           "type": "string"
         },
         {
-          "internalType": "string[10]",
+          "internalType": "string[]",
           "name": "IPFSaddr",
-          "type": "string[10]"
+          "type": "string[]"
         },
         {
           "internalType": "address",
@@ -133,22 +136,43 @@ def addData(folderName):
       "name": "getData",
       "outputs": [
         {
-          "internalType": "string[10]",
+          "internalType": "string[]",
           "name": "",
-          "type": "string[10]"
+          "type": "string[]"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "conAddr",
+          "type": "address"
+        }
+      ],
+      "name": "getStealth",
+      "outputs": [
+        {
+          "internalType": "string",
+          "name": "",
+          "type": "string"
         }
       ],
       "stateMutability": "view",
       "type": "function"
     }
-  ]#コントラクトのABI
+  ]
+    #コントラクトのABI
+    loadFile = json.load(open('./contractAddress.json'))    # コントラクトのアドレス
     contract_address = loadFile["contractData"]# コントラクトのアドレス
     print("contract address: " + contract_address)
 
     contract = web3.eth.contract(address=contract_address, abi=contract_abi)
-    generatorAddr = "0xe22694a13837DA6bC13B666b37A5Cb321B654b49"
+    generatorAddr = id
     #本当は上で呼び出したアドレスがgeneratoeAddrなんか上手くいかん
-    contract.functions.addData(steathAddr, ehrAddr, generatorAddr).transact({'from': generatorAddr})
+    contract.functions.addData(stealthAddr, ehrAddr, generatorAddr).transact({'from': generatorAddr})
     print("store to blockchain")
 
 if __name__ == "__main__":

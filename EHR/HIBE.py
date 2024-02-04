@@ -419,62 +419,40 @@ def De_serialize_CT(System_para, serialize_CT):
 
 
 if __name__ == "__main__":
-    SetTime = np.zeros(10)
-    SkGenTime = np.zeros(10)
-    encTime = np.zeros(10)
-    decTime = np.zeros(10)
+    
+    plaintext = b'Hello'
+    max_level = 5
 
-    for i in range(10):
-        plaintext = b'Hello, World!'
-        max_level = 5  # 階層の最大レベルを設定
+    start1 = time.time()
+    System_para, PP, MK = Setup(max_level)
+    end1 = time.time()
 
-        # システムセットアップ
-        start1 = time.time()
-        System_para, PP, MK = Setup(max_level)
-        end1 = time.time()
+    ID_string = ["Alice", "Bob", "Cindy"]
 
-        # アイデンティティの定義
-        ID_Alice = ["Alice", "Dean", "Hospital1"]
-        ID_Dean = ["Dean", "Hospital1"]
+    start2 = time.time()
+    Sk_ID = SkGen(System_para, PP, MK, ID_string)
+    end2 = time.time()
 
-        # 秘密鍵の生成
-        start2 = time.time()
-        Sk_Alice = SkGen(System_para, PP, MK, ID_Alice)
-        Sk_Dean = SkGen(System_para, PP, MK, ID_Dean)
-        end2 = time.time()
+    Del_ID_string = ["Alice", "Bob", "Cindy", "Davis"]
 
-        #鍵の派生
-        Sk_Dean_Alice = SkDel(System_para, PP, Sk_Dean, ID_Alice)
+    start3 = time.time()
+    Sk_Del_ID = SkDel(System_para, PP, Sk_ID, Del_ID_string)
+    end3 = time.time()
 
-        # 暗号化
-        start4 = time.time()
-        Enc_key, Enc_message = Enc(System_para, PP, ID_Alice, plaintext)
-        end4 = time.time()
+    receiver_ID_string = Del_ID_string
 
-        # 復号化
-        start5 = time.time()
-        Decrypted_message = Dec(System_para, PP, Sk_Dean_Alice, Enc_key, Enc_message)
-        end5 = time.time()
+    start4 = time.time()
+    Enc_key, Enc_message = Enc(System_para, PP, receiver_ID_string, plaintext)
+    end4 = time.time()
 
-        #print("Original Message:", plaintext)
-        #print("Decrypted Message:", Decrypted_message)
+    receiver_Sk = Sk_Del_ID
 
-        #print("Setup:%f s" % (end1 - start1))
-        #print("SkGen:%f s" % (end2 - start2))
-        #print("SkDel:%f s" % (end3 - start3))
-        #print("Enc:%f s" % (end4 - start4))
-        #print("Dec:%f s" % (end5 - start5))
-        SetTime[i] =  end1 - start1
-        SkGenTime[i] = end2 - start2
-        encTime[i] = end4 - start4
-        decTime[i] = end5 - start5
+    start5 = time.time()
+    result = Dec(System_para, PP, receiver_Sk, Enc_key, Enc_message)
+    end5 = time.time()
 
-    aveSetTime = np.mean(SetTime)*1000
-    aveSkGenTime = np.mean(SkGenTime)*1000
-    aveEncTime = np.mean(encTime)*1000
-    aveDecTime = np.mean(decTime)*1000
-
-    print("Setup:%f ms" % aveSetTime)
-    print("SkGen:%f ms" % aveSkGenTime)
-    print("Enc:%f ms" % aveEncTime)
-    print("Dec:%f ms" % aveDecTime)
+    print("Setup:%f ms" % ((end1 - start1)*1000))
+    print("SkGen:%f ms" % ((end2 - start2)*1000))
+    print("SkDel:%f ms" % ((end3 - start3)*1000))
+    print("Enc:%f ms" % ((end4 - start4)*1000))
+    print("Dec:%f ms" % ((end5 - start5)*1000))

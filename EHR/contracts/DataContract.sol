@@ -12,7 +12,7 @@ contract DataContract{
     // データ構造の定義
     struct Record {
         string SA;
-        string[10] IPFSaddr;
+        string[] IPFSaddr;
         address from;
     }
 
@@ -21,7 +21,7 @@ contract DataContract{
 
     // この関数は所有者によってのみ呼び出すことができる
     // データの追加
-    function addData(string memory SA, string[10] memory IPFSaddr, address from) public returns (bool) {
+    function addData(string memory SA, string[] memory IPFSaddr, address from) public returns (bool) {
         if (msg.sender == owner) {
             records[address(this)] = Record(SA, IPFSaddr, from);
             return true;
@@ -32,14 +32,22 @@ contract DataContract{
     }
 
     // データの取得
-    function getData(address conAddr) public view returns (string[10] memory) {
+    function getData(address conAddr) public view returns (string[] memory) {
         if (conAddr != address(0)) {
             return records[conAddr].IPFSaddr;
         } else {
-            string[10] memory emptyArray;
+            string[] memory emptyArray;
             return emptyArray;
         }
     }
     
+    //stealth addressを返す
+    function getStealth(address conAddr) public view returns (string memory){
+        if (conAddr != address(0)) {
+            return records[conAddr].SA;
+        } else {
+            return "";
+        }
 
+    }
 }

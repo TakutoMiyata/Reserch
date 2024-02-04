@@ -21,6 +21,7 @@ def setup(max_level):
 
     c1 = group.random(G1)
     c2 = group.random(G1) 
+
     h = [group.random(G1) for i in range(max_level)]
     params = (g, g1, c1, c2, h)
 
@@ -34,59 +35,51 @@ def Keygen(msk, level, ID, params, pp):
     c2 = params[3]
     h = params[4]
     if level == 1:
-        #print("Your level is first")
+        print("Your level is 1")
         r = group.random(ZR)
     else:
-        #print("Your level is",level)
+        print("Your level is ",level)
         r = pp
-    r = group.random(ZR) 
+    #r = group.random(ZR) 
     h_PK_ID = [h[i] ** PK_ID[i] for i in range(level)]
-    #print("h_PK_ID:",h_PK_ID)
-    h_r_now = [h_i ** r for h_i in h[level-1:max_level-1]]
-    #print("h_r_now:",h_r_now)
-    #print("len",len(h_r_now))
+    h_r_now = [h[j+1]**r for j in range(max_level+1 - level)]
+    print(len(h_r_now))
     h_PK_ID_c2 = reduce(operator.mul, h_PK_ID, 1) * c2
-    #print("h_PK_ID_c2:",h_PK_ID_c2)
     h_PK_ID_c2_r = h_PK_ID_c2 ** r
     msk_h = msk * h_PK_ID_c2_r
-    #print("msk_h:",msk_h)
-    SK_ID = (msk_h, g**r, h_r_now)
-    return PK_ID, SK_ID, r
+    SK_ID = (msk_h, g ** r, h_r_now)
 
-def derive(SK_ID_, msk, params, del_ID, r):
-    level = len(del_ID) #作りたいレベル
-    max_level = len(params[4]) #最大のレベル
+    return PK_ID, SK_ID
 
-    #r_ = group.random(ZR)
-    r_ = r
-    t = group.random(ZR)
+def delive(SK_ID_, msk, params, del_ID):
+    level = len(SK_ID)
+    max_level = len(params[4])
+    len_del_ID = len(del_ID)
+
     g = params[0]
-    c2 = params[3]
-    h = params[4]
     gt = g**t
+    r_ = group.random(ZR)
+    t = group.random(ZR)
+    h = params[4]
 
     # SKTopic|q−1 =(cα ·(hT1 ···hTq−1 ·c2)r ,дr′,hqr′,...,hr′)=(a0,a1,bq,...,bl).
     (a0, a1, b) = (SK_ID_[0], SK_ID_[1], SK_ID_[2])
-    #print("a0:",a0)
-    r = r_ + t
+    # r = r_ + t
 
     PK_del_ID = [group.hash(i) for i in del_ID] #IDをZRの要素に変換
-    #print("PK_del_ID:",PK_del_ID)   #PK_ID = PK_del_ID OK
     h_PK_del_ID = [h[i] ** PK_del_ID[i] for i in range(level)]
-    #print("h_PK_del_ID:",h_PK_del_ID)
     h_PK_del_ID_c2 = reduce(operator.mul, h_PK_del_ID, 1) * c2
-    #print("h_PK_del_ID_c2:",h_PK_del_ID_c2) #OK
-    h_PK_del_ID_c2_t = h_PK_del_ID_c2 ** t
-    #print("b:",b) #OK
-    b0h = b[0]**PK_del_ID[-1]
+    h_PK_ID_c2_t = h_PK_ID_c2 ** t
     
-    if level+2 > max_level:
-        bh = b[-1]*h[-1]
+    if level+1 > max_level:
+        bh = 0
     else:
-        bh = [b[i+1] * h[i+1] for i in range(max_level-2)]
+        bh = [x * h for x in b[level+1:max_level-1]]
+
     PK_ID = PK_del_ID
-    SK_ID = (a0 * b0h * h_PK_del_ID_c2_t, a1*gt, bh)
+    SK_ID = (a0*b[0]*h_PK_ID_c2_t, a1*gt, bh)
     pp = r
+
     return PK_ID, SK_ID, pp
 
 def encrypt(msg, level, PK_ID, params):
@@ -144,84 +137,38 @@ if __name__ == "__main__":
     start1 = time.time()
     params, msk= setup(max_level)
     end1 = time.time()
-    #print("setup")
-    #print("h:",params[4])
 
-    level = 1 #ID's level
-    ID1 = ["Hospital1"]
-    msg1 = "Hello World1."
-    PK_ID1, SK_ID1, r = Keygen(msk, level, ID1, params, pp)
-    #print("SK_ID1[0]:",SK_ID1[0])
-    #print("SK_ID1[1]:",SK_ID1[1])
-    #print("SK_ID1[2]:",SK_ID1[2])
+    level = 3 #ID's level
+    ID = "miyata"
+    msg = "Hello World."
 
-    CT1 ,symmetric_key1 = encrypt(msg1, level, PK_ID1, params)
+    start2 = time.time()
+    PK_ID, SK_ID = Keygen(msk, level, ID, params, pp)
+    end2 = time.time()
 
-    start3 = time.time()#level1からlevel2を作る
-    ID2 = ["Hospital1","dean"]
-    msg2 = "Hello World2."
-
-    del_ID = ID2
-    SK_ID_ = SK_ID1
-    PK_ID, SK_ID, pp = derive(SK_ID_, msk, params, del_ID, r)
-    end3 = time.time()
-    #print("SK_ID[0]:",SK_ID[0])
-    #print("SK_ID[1]:",SK_ID[1])
-    #print("SK_ID[2]:",SK_ID[2])
-
-    #print("derive")
-    #print(pp)
-
-    level = 2 #ID's level
-    #start2 = time.time()
-    PK_ID2, SK_ID2, r = Keygen(msk, level, ID2, params, pp)
-    #print(PK_ID2)
-    #print("SK_ID2[0]:",SK_ID2[0])
-    #print("SK_ID2[1]:",SK_ID2[1])
-    #print("SK_ID2[2]:",SK_ID2[2])
-    #print(r)
-    #end2 = time.time()
-    CT2 ,symmetric_key2 = encrypt(msg2, level, PK_ID2, params)
-
-    if SK_ID == SK_ID2:
-        print("SK correct")
-    else:
-        if SK_ID[0]==SK_ID2[0]:
-            print("0 OK")
-        else:
-            print("0 miss")
-        if SK_ID[1]==SK_ID2[1]:
-            print("1 OK")
-        else:
-            print("1 miss")            
-        if SK_ID[2]==SK_ID2[2]:
-            print("2 OK")
-        else:
-            print("2 miss")
-
-    '''
     start4 = time.time()
     CT ,symmetric_key = encrypt(msg, level, PK_ID, params)
     end4 = time.time()
-    '''
+
     start5 = time.time()
-    msg_, X = decrypt(SK_ID, CT2)
+    msg_, X = decrypt(SK_ID, CT)
     msg_ = msg_.decode('utf-8')
     end5 = time.time()
-    print("decrypt")
 
-    if msg2 == msg_:
+    if msg == msg_:
         print("CORRECT!")
     else:
         print("MISS...")
-        print(msg2)
+        print(msg)
         print(msg_)
         if symmetric_key == X:  # デバッグ用
             print("key OK")
         else:
             print("key miss")
-    #print("Setup:%f ms" % ((end1 - start1)*1000))
-    #print("SkGen:%f ms" % ((end2 - start2)*1000))
+
+    print("Setup:%f ms" % ((end1 - start1)*1000))
+    print("SkGen:%f ms" % ((end2 - start2)*1000))
     #print("SkDel:%f s" % ((end3 - start3)*1000))
-    #print("Enc:%f ms" % ((end4 - start4)*1000))
-    #print("Dec:%f ms" % ((end5 - start5)*1000))
+    print("Enc:%f ms" % ((end4 - start4)*1000))
+    print("Dec:%f ms" % ((end5 - start5)*1000))
+
