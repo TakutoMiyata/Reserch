@@ -18,10 +18,10 @@ contract appDoc{
     }
 
     // 状態変数の定義
-    uint[] thisEnPermMap;
+    string[] thisEnPermMap;
 
 
-    function deployAccPerm(address dataConAddr, string memory myStealth, uint[] memory EnPermMap) public {
+    function deployAccPerm(address dataConAddr, string memory myStealth, string[] memory EnPermMap) public{
         DataContract data = DataContract(dataConAddr);
         string memory stealthAddr = data.getStealth(dataConAddr);
         if (msg.sender == owner && keccak256(abi.encodePacked(stealthAddr)) == keccak256(abi.encodePacked(myStealth))) {
@@ -29,23 +29,22 @@ contract appDoc{
         }
     }
 
-    function AccPermReq(uint PermMap) public returns(string[] memory){
-        if (PermMap != 0){
-            address conAddr = address(uint160(PermMap));  //型を変換する．
-            DataContract data = DataContract(conAddr);
-            string[] memory IPFSaddr = data.getData(conAddr);
-            return IPFSaddr;
+    function AccPermReq(address addrFromPermMap) public returns(string[] memory){
+        if (addrFromPermMap != address(0)){
+            DataContract data = DataContract(addrFromPermMap);
+            string[] memory ipfsAddr = data.getData(addrFromPermMap);
+            return ipfsAddr;
         }
         else{
             return new string[](0); // 空の配列を正しく初期化
         }
     }
 
-    function getEnPermMap(address conAddr) public view returns(uint[] memory){
+    function getEnPermMap(address conAddr) public view returns(string[] memory){
         if (conAddr != address(0)) {
             return thisEnPermMap;
         } else {
-            uint[] memory emptyArray;
+            string[] memory emptyArray;
             return emptyArray;
         }
 

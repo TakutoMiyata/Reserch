@@ -18,7 +18,7 @@ def deploy(seed):
 
         # abi，bytecodeを読み込む
         #truffleFile = json.load(open('./build/contracts/deployしたいファイル名.json'))
-        truffleFile = json.load(open('./build/contracts/DataContract.json'))
+        truffleFile = json.load(open('./build/contracts/data.json'))
         #truffleFile = json.load(open('./build/contracts/UserAddress.json'))
 
         abi = truffleFile['abi']

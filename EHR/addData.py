@@ -19,8 +19,13 @@ def addData(folderName):
     print("ID:",id)
     
     P = 10
-    stealthAddr = generate_address_for_id(id, P)
+    msk, MPK = setup(P)
+    id_encode = id.encode('utf-8')
+    UPK, USK = keyGen(id_encode, MPK, P)
+    stealthAddr = 0
+    stealthAddr, R = generate_address_for_id(id, P)
     stealthAddr = convert_addr_to_string(stealthAddr)
+
     print("compute Stealh Address")
     print("stealth Address:",stealthAddr)
 
@@ -174,6 +179,7 @@ def addData(folderName):
     #本当は上で呼び出したアドレスがgeneratoeAddrなんか上手くいかん
     contract.functions.addData(stealthAddr, ehrAddr, generatorAddr).transact({'from': generatorAddr})
     print("store to blockchain")
+    return stealthAddr, USK, R, P
 
 if __name__ == "__main__":
     addData("otameshiFolder")

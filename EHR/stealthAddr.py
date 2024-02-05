@@ -44,7 +44,7 @@ def generate_address_for_id(ID_string, P):
     ID = ID_string.encode('utf-8')
     msk, MPK = setup(P)
     ADDR, R = addrGen(ID, MPK, P)
-    return ADDR
+    return ADDR, R
 
 def convert_addr_to_string(ADDR):#文字列に変換
     # ADDRをバイナリ（バイト列）にシリアライズする
