@@ -89,9 +89,14 @@ if __name__ == "__main__":
         ID.append(["0xd691b959f1624B4b721e58a6DcEf363fEDA1D4F1","0xD3C6d21cdCAA34EcFb5A2ca57C9096506ed88131"])
         ID.append(["0xd691b959f1624B4b721e58a6DcEf363fEDA1D4F1", "0xD3C6d21cdCAA34EcFb5A2ca57C9096506ed88131", "0x67c9268ded4162756429Fef09c7D673Efd906Dd1"])
 
+        start_upload = time.time()
+        
         Sk_ID, EncKey, SkGenTime, EncTime = encAndWrite(System_para, PP, MK, ID)#ファイルに書き込み
         stealthAddr, USK, R, P = addData("otameshiFolder")#ファイルをIPFSに乗っける
         print("データの登録を完了しました")
+
+        end_upload = time.time()
+        time_upload = (end_upload - start_upload)*1000
     #データの登録完了
     #------------------------------------------------------------------------------------
         loadFile = json.load(open('./contractAddress.json'))
@@ -117,6 +122,8 @@ if __name__ == "__main__":
     #病院を登録
     #------------------------------------------------------------------------------------
         #appDoctor.solからenPermMapをゲットする．
+        start_getData = time.time()
+
         doc_enPermMap=[]
         doc_enPermMap.extend(getEnPermMap())
         #if doc_enPermMap is None:
@@ -175,11 +182,15 @@ if __name__ == "__main__":
         # クライアント接続を閉じる
         client.close()
 
+        end_getData = time.time()
+        time_getData = (end_getData - start_getData)*1000
         print("データの閲覧に成功しました")
-        
+
         print("Setup:%f ms" % SetupTime)
         print("SkGen:%f ms" % SkGenTime)
         print("Enc:%f ms" % EncTime)
         print("Dec:%f ms" % DecTime)
+        print("Upload:%f ms" % time_upload)
+        print("GetData:%f ms" % time_getData)
 
 
