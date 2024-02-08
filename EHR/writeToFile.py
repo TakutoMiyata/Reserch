@@ -20,8 +20,15 @@ def encAndWrite(System_para, PP, MK, ID):
     '''
     start2 = time.time()#keyGenの計測
     Sk_ID.append(SkGen(System_para, PP, MK, ID[0]))
-    Sk_ID.append(SkGen(System_para, PP, MK, ID[1]))
-    Sk_ID.append(SkGen(System_para, PP, MK, ID[2]))
+    Sk_ID.append(SkDel(System_para, PP, Sk_ID[0], ID[1]))
+    Sk_ID.append(SkDel(System_para, PP, Sk_ID[0], ID[2]))
+    Sk_ID.append(SkDel(System_para, PP, Sk_ID[0], ID[3]))
+    Sk_ID.append(SkDel(System_para, PP, Sk_ID[0], ID[4]))
+    Sk_ID.append(SkDel(System_para, PP, Sk_ID[1], ID[5]))
+    Sk_ID.append(SkDel(System_para, PP, Sk_ID[1], ID[6]))
+    Sk_ID.append(SkDel(System_para, PP, Sk_ID[1], ID[7]))
+    Sk_ID.append(SkDel(System_para, PP, Sk_ID[1], ID[8]))
+    Sk_ID.append(SkDel(System_para, PP, Sk_ID[1], ID[9]))
     end2 = time.time()
     SkGenTime = (end2 - start2)*1000
 

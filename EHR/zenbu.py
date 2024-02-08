@@ -87,8 +87,15 @@ if __name__ == "__main__":
         ID=[]
         ID.append(["0xd691b959f1624B4b721e58a6DcEf363fEDA1D4F1"])
         ID.append(["0xd691b959f1624B4b721e58a6DcEf363fEDA1D4F1","0xD3C6d21cdCAA34EcFb5A2ca57C9096506ed88131"])
-        ID.append(["0xd691b959f1624B4b721e58a6DcEf363fEDA1D4F1", "0xD3C6d21cdCAA34EcFb5A2ca57C9096506ed88131", "0x67c9268ded4162756429Fef09c7D673Efd906Dd1"])
-
+        ID.append(["0xd691b959f1624B4b721e58a6DcEf363fEDA1D4F1", "0x67c9268ded4162756429Fef09c7D673Efd906Dd1"])
+        ID.append(["0xd691b959f1624B4b721e58a6DcEf363fEDA1D4F1", "0x08aCA4CbC3298545A20e397FdDD77b0AA2704aC8"])
+        ID.append(["0xd691b959f1624B4b721e58a6DcEf363fEDA1D4F1", "0x77531B71944Cae1714955863314708B5F56e3491"])
+        ID.append(["0xd691b959f1624B4b721e58a6DcEf363fEDA1D4F1", "0xD3C6d21cdCAA34EcFb5A2ca57C9096506ed88131", "0x93EED64b7bF4B7b685c1EB74c70744cb38ae3535"])
+        ID.append(["0xd691b959f1624B4b721e58a6DcEf363fEDA1D4F1", "0xD3C6d21cdCAA34EcFb5A2ca57C9096506ed88131", "0x5A206f543e9a4139CE20EC6a538F5c16Fe3EAC0B"])
+        ID.append(["0xd691b959f1624B4b721e58a6DcEf363fEDA1D4F1", "0xD3C6d21cdCAA34EcFb5A2ca57C9096506ed88131", "0xBB8Cb0169E5D488e154d661d3c6142314f888589"])
+        ID.append(["0xd691b959f1624B4b721e58a6DcEf363fEDA1D4F1", "0xD3C6d21cdCAA34EcFb5A2ca57C9096506ed88131", "0x72147E0609E612bCd326aEFee7F2a29E79baCf4C"])
+        ID.append(["0xd691b959f1624B4b721e58a6DcEf363fEDA1D4F1", "0xD3C6d21cdCAA34EcFb5A2ca57C9096506ed88131", ""])
+        ID.append(["0xd691b959f1624B4b721e58a6DcEf363fEDA1D4F1", "0xD3C6d21cdCAA34EcFb5A2ca57C9096506ed88131", "0x47b80aBdc480AEC202c4740b5647a745F684C815"])
         start_upload = time.time()
         
         Sk_ID, EncKey, SkGenTime, EncTime = encAndWrite(System_para, PP, MK, ID)#ファイルに書き込み
@@ -101,12 +108,8 @@ if __name__ == "__main__":
     #------------------------------------------------------------------------------------
         loadFile = json.load(open('./contractAddress.json'))
         Datacontract_address = loadFile["contractData"]# コントラクトのアドレス
-        hospitalAddr = []
-        #hospitalAddr = ["0xd691b959f1624B4b721e58a6DcEf363fEDA1D4F1","0xD3C6d21cdCAA34EcFb5A2ca57C9096506ed88131", "0x67c9268ded4162756429Fef09c7D673Efd906Dd1"] #許可する病院のアドレス
-        hospitalAddr.append(["0xd691b959f1624B4b721e58a6DcEf363fEDA1D4F1"])
-        print("hospitalAddr:", hospitalAddr)
 
-        Enc_key, enPermMap = makeEnPermMap(Datacontract_address, hospitalAddr, System_para, PP)
+        Enc_key, enPermMap = makeEnPermMap(Datacontract_address, ID, System_para, PP)
         #print("enPermMap:", enPermMap) 
         enPermMap = list(enPermMap.values())
         #print("enPermMap:", enPermMap)
