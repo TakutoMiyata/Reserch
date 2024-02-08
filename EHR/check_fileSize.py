@@ -9,7 +9,7 @@ import os
 from HIBE import *
 import pickle
 #from writeToFile import encAndWrite
-from checkWriteToFile import * 
+from checkWriteToFile_fileSize import * 
 from operateDoctor import *
 import time
 from emptyFolder import *

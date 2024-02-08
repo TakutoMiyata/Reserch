@@ -26,21 +26,22 @@ def checkEncAndWrite(System_para, PP, MK, ID):
     end2 = time.time()
     SkGenTime = (end2 - start2)*1000
 
+    for i in range(80):
+        file_path = f"fileNumber/mbFile_{i}.txt"
+        file_path_write = f"fileNumber_write/mbFile_{i}.txt"
+        plaintext = checkRead(file_path)
+        start3 = time.time()
+        Enc_key, Enc_message = Enc(System_para, PP, ID[0], plaintext)
+        end3 = time.time()
+        EncTime = (end3 - start3)*1000
+        time3.append(EncTime)
+        EncKey.append(Enc_key)
+        print(file_path,"encTime:",EncTime,"ms")
+        write(file_path_write, Enc_message)
 
-    file_path = "fileSize/200mbFile.txt"
-    file_path_write = "fileSize_write/200mbFile.txt"
-    plaintext = checkRead(file_path)
-    start3 = time.time()
-    Enc_key, Enc_message = Enc(System_para, PP, ID[0], plaintext)
-    end3 = time.time()
-    EncTime = (end3 - start3)*1000
-    EncKey.append(Enc_key)
-    print(file_path,"encTime:",EncTime,"ms")
-    write(file_path_write, Enc_message)
-    
     print("finish writing")
-    print(file_path)
-    print(file_path_write)
+    
+    EncTime = sum(time3)
     return Sk_ID, EncKey, SkGenTime, EncTime
 
 if __name__ == "__main__":
