@@ -26,7 +26,7 @@ def checkEncAndWrite(System_para, PP, MK, ID):
     end2 = time.time()
     SkGenTime = (end2 - start2)*1000
 
-    for i in range(80):
+    for i in range(1):
         file_path = f"fileNumber/mbFile_{i}.txt"
         file_path_write = f"fileNumber_write/mbFile_{i}.txt"
         plaintext = checkRead(file_path)

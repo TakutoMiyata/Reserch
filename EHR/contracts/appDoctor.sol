@@ -47,6 +47,5 @@ contract appDoc{
             string[] memory emptyArray;
             return emptyArray;
         }
-
     }
 }
